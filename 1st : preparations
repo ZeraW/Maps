@@ -1,0 +1,41 @@
+1-build gradle 
+---------------------------------------------
+
+//Google Play Services for Maps
+implementation 'com.google.android.gms:play-services-maps:15.0.1'
+
+// Google play services for location information
+implementation 'com.google.android.gms:play-services-location:15.0.1'
+
+2-value/string
+---------------------------------------------
+a- create project on google maps 
+b- enable maps for android + directions
+c- get the api key in my case 'AIzaSyCvxLU1p9KD4pAAuDAUeNQzVOSqZcoToMY'
+d- put it in string.xml 
+<string name="google_maps_api_key">AIzaSyCvxLU1p9KD4pAAuDAUeNQzVOSqZcoToMY</string>
+
+
+3-manifest
+---------------------------------------------
+
+<uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
+        
+<application >
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_api_key"/>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+<application >
