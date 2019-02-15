@@ -20,7 +20,9 @@ public class MainActivity extends AppCompatActivity {
     private UserLocation mUserLocation; // the model class
 
 
-    oncreate() {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mDb = FirebaseFirestore.getInstance();
     }
