@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "onComplete: successfully set the user client.");
-                        User user = task.getResult().toObject(User.class);
-                        mUserLocation.setUser(user);
+                        User user = task.getResult().toObject(User.class); // get the user as an object
+                        mUserLocation.setUser(user);  //add the user to userlocation object
 			((UserClient)(getApplicationContext())).setUser(user);  // the user singletone u will find it at the end
                         getLastKnownLocation();
                     }
