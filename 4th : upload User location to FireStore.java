@@ -1,4 +1,20 @@
+1st: you need the following 
+------------------------------------------------------------------------------------------------------------
+a- User model class
+b- userLocation model class 
+i've add them at the end of this File
+------------------------------------------------------------------------------------------------------------
 
+2nd : in string.xml :
+--------------------------------
+//this is the best practice for collection name in firestore
+<string name="collection_user_locations">User Locations</string>
+<string name="collection_users">Users</string>
+------------------------------------------------------------------------------------------------------------
+
+3rd : in main activity : 
+--------------------------------
+    
 public class MainActivity extends AppCompatActivity {
     
     private FusedLocationProviderClient mFusedLocationClient;
