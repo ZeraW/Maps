@@ -14,19 +14,19 @@ i've add them at the end of this File
 
 3rd : in main activity : 
 --------------------------------
-public class MainActivity extends AppCompatActivity{
-private FusedLocationProviderClient mFusedLocationClient;
-private FirebaseFirestore mDb;
-private UserLocation mUserLocation; // the model class
+public class MainActivity extends AppCompatActivity {
+    private FusedLocationProviderClient mFusedLocationClient;
+    private FirebaseFirestore mDb;
+    private UserLocation mUserLocation; // the model class
 
 
-oncreate(){
-mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-mDb = FirebaseFirestore.getInstance();
-}
- 
-private void getUserDetails(){
-        if(mUserLocation == null){
+    oncreate() {
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mDb = FirebaseFirestore.getInstance();
+    }
+
+    private void getUserDetails() {
+        if (mUserLocation == null) {
             mUserLocation = new UserLocation();
             DocumentReference userRef = mDb.collection(getString(R.string.collection_users))
                     .document(FirebaseAuth.getInstance().getUid());
@@ -34,7 +34,7 @@ private void getUserDetails(){
             userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         Log.d(TAG, "onComplete: successfully set the user client.");
                         User user = task.getResult().toObject(User.class);
                         mUserLocation.setUser(user);
@@ -42,13 +42,12 @@ private void getUserDetails(){
                     }
                 }
             });
-        }
-        else{
+        } else {
             getLastKnownLocation();
         }
-}
+    }
 
-private void getLastKnownLocation() {
+    private void getLastKnownLocation() {
         Log.d(TAG, "getLastKnownLocation: called.");
 
 
@@ -68,11 +67,11 @@ private void getLastKnownLocation() {
             }
         });
 
-}
+    }
 
-private void saveUserLocation(){
+    private void saveUserLocation() {
 
-        if(mUserLocation != null){
+        if (mUserLocation != null) {
             DocumentReference locationRef = mDb
                     .collection(getString(R.string.collection_user_locations))
                     .document(FirebaseAuth.getInstance().getUid());
@@ -80,7 +79,7 @@ private void saveUserLocation(){
             locationRef.set(mUserLocation).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         Log.d(TAG, "saveUserLocation: \ninserted user location into database." +
                                 "\n latitude: " + mUserLocation.getGeo_point().getLatitude() +
                                 "\n longitude: " + mUserLocation.getGeo_point().getLongitude());
@@ -88,8 +87,8 @@ private void saveUserLocation(){
                 }
             });
         }
-}
-}    
+    }
+}   
 ------------------------------------------------------------------------------------------------------------
 4th : how to use it 
 ---------------------
