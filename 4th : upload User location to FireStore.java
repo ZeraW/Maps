@@ -23,7 +23,7 @@ oncreate(){
 mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 mDb = FirebaseFirestore.getInstance();
 }
-
+ 
 private void getUserDetails(){
         if(mUserLocation == null){
             mUserLocation = new UserLocation();
