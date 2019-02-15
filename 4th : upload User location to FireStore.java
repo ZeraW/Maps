@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private FusedLocationProviderClient mFusedLocationClient;
     private FirebaseFirestore mDb;
     private UserLocation mUserLocation; // the model class
+    private static final String TAG = "MainActivity";
 
 
     @Override
