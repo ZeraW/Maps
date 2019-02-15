@@ -2,6 +2,7 @@
 ------------------------------------------------------------------------------------------------------------
 a- User model class
 b- userLocation model class 
+c- singletone for the user
 i've add them at the end of this File
 ------------------------------------------------------------------------------------------------------------ 
 
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, "onComplete: successfully set the user client.");
                         User user = task.getResult().toObject(User.class);
                         mUserLocation.setUser(user);
+						((UserClient)(getApplicationContext())).setUser(user);
                         getLastKnownLocation();
                     }
                 }
@@ -65,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     Location location = task.getResult();
                     GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
-                    mUserLocation.setGeo_point(geoPoint);  //model attribute 
-                    mUserLocation.setTimestamp(null);   //model attribute
+                    mUserLocation.setGeo_point(geoPoint);
+                    mUserLocation.setTimestamp(null);
                     saveUserLocation();
                 }
             }
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void saveUserLocation() {
+private void saveUserLocation() {
 
         if (mUserLocation != null) {
             DocumentReference locationRef = mDb
@@ -92,8 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-    }
-}   
+    }   
 /*------------------------------------------------------------------------------------------------------------
 4th : how to use it 
 ---------------------
@@ -253,3 +254,25 @@ public class UserLocation {
     }
 
 }
+/* ------------------------------------------------------------------------------------------------------------
+u need to add this line in 
+manifest/application>
+android:name=".UserClient"
+
+-why we need this ?
+to retrive the user once and use it in the entire project 
+------------------------------------------------------------------------------------------------------------*/
+public class UserClient extends Application {
+
+    private User user = null;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+}
+
