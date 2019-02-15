@@ -19,6 +19,9 @@ public class fragmentnamegoeshere extends Fragment implements OnMapReadyCallback
     //widgets
     private RecyclerView mUserListRecyclerView;
     private MapView mMapView;
+    private GoogleMap mGoogleMap;
+    private UserLocation mUserPosition;
+    private LatLngBounds mMapBoundary;
     
     @Override
     public View onCreateView(){
@@ -80,6 +83,8 @@ private void initGoogleMap(Bundle savedInstanceState){
         }
         //show my location
         map.setMyLocationEnabled(true);
+        mGoogleMap = map;
+        setCameraView();
     }
 
     @Override
@@ -99,6 +104,30 @@ private void initGoogleMap(Bundle savedInstanceState){
         super.onLowMemory();
         mMapView.onLowMemory();
     }
+    
+    
+     /**
+     * Determines the view boundary then sets the camera
+     * Sets the view
+     * To zoom in the user location
+     */
+    private void setCameraView() {
+
+        // Set a boundary to start  
+        // the main user location 
+        double bottomBoundary = mUserPosition.getGeo_point().getLatitude() - .1;
+        double leftBoundary = mUserPosition.getGeo_point().getLongitude() - .1;
+        double topBoundary = mUserPosition.getGeo_point().getLatitude() + .1;
+        double rightBoundary = mUserPosition.getGeo_point().getLongitude() + .1;
+
+        mMapBoundary = new LatLngBounds(
+                new LatLng(bottomBoundary, leftBoundary),
+                new LatLng(topBoundary, rightBoundary)
+        );
+
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(mMapBoundary, 0));
+    }
+    
     
 
 }
