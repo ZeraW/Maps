@@ -14,6 +14,7 @@ i've add them at the end of this File
 
 3rd : in main activity : 
 --------------------------------
+public class MainActivity extends AppCompatActivity{
 private FusedLocationProviderClient mFusedLocationClient;
 private FirebaseFirestore mDb;
 private UserLocation mUserLocation; // the model class
@@ -88,7 +89,7 @@ private void saveUserLocation(){
             });
         }
 }
-    
+}    
 ------------------------------------------------------------------------------------------------------------
 4th : how to use it 
 ---------------------
