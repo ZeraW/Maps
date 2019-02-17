@@ -1,5 +1,10 @@
 /* 1st: create new service 
 ----------------------------------------*/
+// don't forget to add the service to menfist 
+/* <service
+    android:name=".services.LocationService"
+    android:stopWithTask="true" /> */
+
 public class LocationService extends Service {
 
     private static final String TAG = "LocationService";
@@ -40,7 +45,7 @@ public class LocationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand: called.");
         getLocation();
-        return START_NOT_STICKY;
+        return START_NOT_STICKY;  // this means the service will keep running as long as there is something running inside of it
     }
 
     private void getLocation() {
@@ -105,3 +110,131 @@ public class LocationService extends Service {
 
     }
 }
+/*----------------------------------------------------------------------------------------
+2nd : start the service in mainactivity 
+----------------------------------------------------*/
+// call this method after saving the userlocation for the first time 
+// in the get last known location method
+private void startLocationService(){
+        if(!isLocationServiceRunning()){
+            Intent serviceIntent = new Intent(this, LocationService.class);
+//        this.startService(serviceIntent);
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
+
+                MainActivity.this.startForegroundService(serviceIntent);
+            }else{
+                startService(serviceIntent);
+            }
+        }
+    }
+/*----------------------------------------------------------------------------------------
+3rd : add this method in the MyClusterManagerRenderer class
+--------------------------------------------------------*/
+ /**
+     * Update the GPS coordinate of a ClusterItem
+     * @param clusterMarker
+     */
+    public void setUpdateMarker(ClusterMarker clusterMarker) {
+        Marker marker = getMarker(clusterMarker);
+        if (marker != null) {
+            marker.setPosition(clusterMarker.getPosition());
+        }
+    }
+
+/*----------------------------------------------------------------------------------------
+4th : update the marker on the map 
+copy this in the MapFragment 
+----------------------------------------------------*/
+private Handler mHandler = new Handler();
+private Runnable mRunnable;
+private static final int LOCATION_UPDATE_INTERVAL = 3000;
+
+// starting runnable for retrieving updated locations
+private void startUserLocationsRunnable(){
+        Log.d(TAG, "startUserLocationsRunnable: starting runnable for retrieving updated locations.");
+        mHandler.postDelayed(mRunnable = new Runnable() {
+            @Override
+            public void run() {
+                retrieveUserLocations();
+                mHandler.postDelayed(mRunnable, LOCATION_UPDATE_INTERVAL);  // this tell the runnable to keep repeating after the interval
+            }
+        }, LOCATION_UPDATE_INTERVAL);
+    }
+// stop the runnable from retriveing the location
+private void stopLocationUpdates(){ mHandler.removeCallbacks(mRunnable);}
+
+// the retrieving method
+private void retrieveUserLocations(){
+        Log.d(TAG, "retrieveUserLocations: retrieving location of all users in the chatroom.");
+
+        try{
+            for(final ClusterMarker clusterMarker: mClusterMarkers){  // this is the array we used to store the users custom marker
+
+                DocumentReference userLocationRef = FirebaseFirestore.getInstance()
+                        .collection(getString(R.string.collection_user_locations))
+                        .document(clusterMarker.getUser().getUser_id());
+
+                userLocationRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+
+                            final UserLocation updatedUserLocation = task.getResult().toObject(UserLocation.class);
+
+                            // update the location
+                for (int i = 0; i < mClusterMarkers.size(); i++) {
+
+                DocumentReference userLocationRef = FirebaseFirestore.getInstance()
+                        .collection(getString(R.string.collection_user_locations))
+                        .document(mClusterMarkers.get(i).getUser().getUser_id());
+
+                final int finalI = i;
+                userLocationRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+
+                            final UserLocation updatedUserLocation = task.getResult().toObject(UserLocation.class);
+
+                            try {
+                                LatLng updatedLatLng = new LatLng(
+                                        updatedUserLocation.getGeo_point().getLatitude(),
+                                        updatedUserLocation.getGeo_point().getLongitude()
+                                );
+
+                                mClusterMarkers.get(finalI).setPosition(updatedLatLng);
+                                mClusterManagerRenderer.setUpdateMarker(mClusterMarkers.get(finalI));
+
+                            } catch (NullPointerException e) {
+                                Log.e(TAG, "retrieveUserLocations: NullPointerException: " + e.getMessage());
+                            }
+                        }
+                    }
+
+                 });
+            }
+        } catch (IllegalStateException e) {
+            Log.e(TAG, "retrieveUserLocations: Fragment was destroyed during Firestore query. Ending query." + e.getMessage());
+        }
+    }
+               
+/*----------------------------------------------------------------------------------------
+5th : how to use start - stop  LocationUpdates() method
+----------------------------------------------------*/
+ // in the mapfragment 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMapView.onResume();
+        startUserLocationsRunnable(); // update user locations every 'LOCATION_UPDATE_INTERVAL'
+    }
+
+    @Override
+    public void onPause() {
+        mMapView.onPause();
+        stopLocationUpdates(); // stop updating user locations
+        super.onPause();
+    }
+                    
+                    
