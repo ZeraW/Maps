@@ -180,6 +180,22 @@ private ArrayList<ClusterMarker> mClusterMarkers = new ArrayList<>();
         }
     }
 /*-----------------------------------------------------------------------------
- 4th : create a addMapMarkers() method inside the MapFragment :
+ 5th : how to use this method on map fragment :
 ---------------------------------------------------------------*/ 
+
+ @Override
+    public void onMapReady(GoogleMap map) {
+//        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+//                != PackageManager.PERMISSION_GRANTED
+//                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            return;
+//        }
+//        map.setMyLocationEnabled(true);
+//        mGoogleMap = map;
+//        setCameraView();
+      
+        mGoogleMap = map;
+        addMapMarkers();
+    }
 
