@@ -120,6 +120,5 @@ private void expandMapAnimation(){
                 }
                 break;
             }
-
         }
     }
