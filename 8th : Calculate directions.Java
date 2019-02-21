@@ -15,7 +15,7 @@ if(mGeoApiContext == null){
              .build();
 }
 
-// call this method after determine location in 
+//this method takes marker to get the destination GeoPoint
 private void calculateDirections(Marker marker){
         Log.d(TAG, "calculateDirections: calculating directions.");
         
