@@ -71,7 +71,9 @@ implements GoogleMap.OnInfoWindowClickListener
                     .setCancelable(true)
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                            //this marker is created in step 6th to hide this marker later 
+                            //this method will be created in the 7th step to show the other hidden marker 
+                            resetSelectedMarker();
+                            //this marker will be created in the 6th step to hide this marker later 
                             mSelectedMarker = marker;
                             // if he says yes pass the marker to calculateDirections method   
                             calculateDirections(marker);
@@ -188,7 +190,8 @@ private void addPolylinesToMap(final DirectionsResult result){
 implements GoogleMap.OnPolylineClickListener
 //this Marker is made to hide the custom marker when the target marker is created
 private Marker mSelectedMarker = null;
-
+//to store the new EndPoint Marker 
+private ArrayList<Marker> mTripMarkers = new ArrayList<>();
 
 @Override
 public void onMapReady(GoogleMap map) {
@@ -229,5 +232,22 @@ public void onMapReady(GoogleMap map) {
                 polylineData.getPolyline().setColor(ContextCompat.getColor(getActivity(), R.color.darkGrey));
                 polylineData.getPolyline().setZIndex(0);
             }
+        }
+    }
+
+/* 7th : remove endpoint Marker and set the custom marker to visiable 
+------------------------------------------------------------------------- */ 
+//this method will be called onInfoWindowClick when selecting new marker 
+private void resetSelectedMarker(){
+        if(mSelectedMarker != null){
+            mSelectedMarker.setVisible(true);
+            mSelectedMarker = null;
+            removeTripMarkers();
+        }
+    }
+
+    private void removeTripMarkers(){
+        for(Marker marker: mTripMarkers){
+            marker.remove();
         }
     }
