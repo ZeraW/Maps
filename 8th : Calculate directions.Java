@@ -42,7 +42,7 @@ private void calculateDirections(Marker marker){
             public void onResult(DirectionsResult result) {
                 //Log.d(TAG, "onResult: routes: " + result.routes[0].toString());
                // Log.d(TAG, "onResult: geocodedWayPoints: " + result.geocodedWaypoints[0].toString());
-               //this method will be found in the 4th step
+               //this method will be found in the 5th step
                 addPolylinesToMap(result);
             }
 
