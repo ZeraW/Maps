@@ -224,9 +224,12 @@ public void onMapReady(GoogleMap map) {
                         .title("Trip #" + index)
                         .snippet("Duration: " + polylineData.getLeg().duration
                         ));
+                //store the endpoint marker
+                mTripMarkers.add(marker);
 
                 // to show the info window once the new marker is created
                 marker.showInfoWindow(); 
+                
             }
             else{
                 polylineData.getPolyline().setColor(ContextCompat.getColor(getActivity(), R.color.darkGrey));
