@@ -22,6 +22,8 @@ public class fragmentnamegoeshere extends Fragment implements OnMapReadyCallback
     private GoogleMap mGoogleMap;
     private UserLocation mUserPosition;
     private LatLngBounds mMapBoundary;
+        private ArrayList<UserLocation> mUserLocations = new ArrayList<>();
+
     
     @Override
     public View onCreateView(){
